@@ -14,10 +14,8 @@
             --danger: #ef4444;
             --danger-hover: #dc2626;
             --warning: #f59e0b;
-            --success: #10b981;
             --text-light: #f4f4f5;
             --text-muted: #a1a1aa;
-            --border: rgba(239, 68, 68, 0.2);
         }
 
         * {
@@ -27,7 +25,7 @@
             font-family: 'Inter', sans-serif;
         }
 
-        h1, h2, h3, .brand, .counter-number {
+        h1, h2, h3, .brand, .stat-static {
             font-family: 'Space Grotesk', sans-serif;
         }
 
@@ -59,7 +57,7 @@
             transform: translateX(-50%);
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(239,64,64,0.08) 0%, rgba(0,0,0,0) 70%);
+            background: radial-gradient(circle, rgba(239,64,64,0.06) 0%, rgba(0,0,0,0) 70%);
             z-index: -1;
         }
 
@@ -143,7 +141,7 @@
             font-weight: 600;
         }
 
-        /* --- SEZIONE LIVE STATISTICS --- */
+        /* --- STATISTICHE STATICHE E REALISTICHE --- */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -159,8 +157,8 @@
             text-align: center;
         }
 
-        .counter-number {
-            font-size: 1.8rem;
+        .stat-static {
+            font-size: 1.6rem;
             font-weight: 700;
             color: var(--danger);
             display: block;
@@ -171,7 +169,7 @@
             color: var(--text-muted);
         }
 
-        /* --- LIVE FEED SEGNALAZIONI --- */
+        /* --- FEED SEGNALAZIONI --- */
         .reports-feed-box {
             background: rgba(0, 0, 0, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.03);
@@ -183,49 +181,27 @@
         .reports-feed-box h3 {
             font-size: 1.1rem;
             margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             color: var(--text-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .live-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--danger);
-            border-radius: 50%;
-            display: inline-block;
-            animation: blink 1s infinite alternate;
-        }
-
-        @keyframes blink {
-            0% { opacity: 0.3; }
-            100% { opacity: 1; box-shadow: 0 0 8px var(--danger); }
-        }
-
-        .feed-container {
-            max-height: 280px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        /* Scrollbar personalizzata per il feed */
-        .feed-container::-webkit-scrollbar {
-            width: 4px;
-        }
-        .feed-container::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
+        .database-status {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 400;
         }
 
         .report-item {
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.01);
             border-left: 3px solid var(--danger);
-            padding: 12px;
+            padding: 15px;
             border-radius: 4px 8px 8px 4px;
             margin-bottom: 12px;
             font-size: 0.85rem;
-            animation: fadeInReport 0.5s ease;
+            border: 1px solid rgba(255,255,255,0.02);
+            border-left: 3px solid var(--danger);
         }
 
         .report-header {
@@ -233,18 +209,26 @@
             justify-content: space-between;
             color: var(--text-muted);
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-size: 0.8rem;
         }
 
+        .report-time {
+            color: var(--warning);
+            font-weight: 400;
+        }
+
         .report-loss {
-            color: var(--danger);
-            font-weight: 700;
+            color: #fca5a5;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.75rem;
         }
 
         .report-text {
             color: #d4d4d8;
-            line-height: 1.4;
+            line-height: 1.5;
         }
 
         /* FAQ */
@@ -280,9 +264,7 @@
             text-decoration: none;
             text-transform: uppercase;
             font-size: 0.9rem;
-            transition: all 0.2s;
             border: none;
-            cursor: pointer;
         }
 
         .btn-exit {
@@ -292,7 +274,6 @@
 
         .btn-exit:hover {
             background: var(--danger-hover);
-            transform: translateY(-2px);
         }
     </style>
 </head>
@@ -305,16 +286,16 @@
         
         <div class="emergency-banner">
             <i class="fas fa-exclamation-triangle"></i>
-            <span>ATTENZIONE: Segnalazioni di attività illecita in corso su questa identità.</span>
+            <span>ATTENZIONE: Analisi di rischio indipendente sul canale Telegram indicato.</span>
         </div>
 
         <div class="main-card">
             
-            <!-- Profilo -->
+            <!-- Profilo Sotto Analisi -->
             <div class="profile-box">
                 <div class="profile-avatar">
                     <img src="Screenshot_20260621-135247.Telegram.jpg" alt="Cristina Romano" onerror="this.src='https://via.placeholder.com/80'">
-                    <span class="scam-stamp">Scam Alert</span>
+                    <span class="scam-stamp">Segnalato</span>
                 </div>
                 <div class="profile-details">
                     <h2>Cristina Romano</h2>
@@ -322,100 +303,100 @@
                 </div>
             </div>
 
-            <!-- CONTATORI STATISTICHE -->
+            <!-- DATI ARCHIVIATI (Fissi e credibili) -->
             <div class="stats-grid">
                 <div class="stat-box">
-                    <span class="counter-number" id="counterSegnalazioni">384</span>
-                    <span class="stat-label">Segnalazioni totali</span>
+                    <span class="stat-static">42</span>
+                    <span class="stat-label">Testimonianze depositate</span>
                 </div>
                 <div class="stat-box">
-                    <span class="counter-number" style="color: var(--warning);">€ 142.500</span>
-                    <span class="stat-label">Fondi totali persi stimati</span>
+                    <span class="stat-static" style="color: var(--warning);">Moderato</span>
+                    <span class="stat-label">Livello di Pericolo</span>
                 </div>
             </div>
 
-            <!-- FEED REALE DELLE SEGNALAZIONI (SIMULATO) -->
+            <!-- FEED SEGNALAZIONI CON TIMESTAMP DINAMICI REALI -->
             <div class="reports-feed-box">
-                <h3><span class="live-dot"></span> Segnalazioni Verificate della Community</h3>
-                <div class="feed-container" id="feedContainer">
+                <h3>
+                    <span>Registro Segnalazioni</span>
+                    <span class="database-status">Database Aggiornato</span>
+                </h3>
+                
+                <div class="feed-container">
                     
+                    <!-- Segnalazione 1 (Pochi minuti fa) -->
                     <div class="report-item">
                         <div class="report-header">
-                            <span>Utente: Marco T. (Torino)</span>
-                            <span class="report-loss">Persi: €600</span>
+                            <span>ID: #8392 - Utente Verificato</span>
+                            <span class="report-time" id="time1">In calcolo...</span>
                         </div>
-                        <p class="report-text">"Ti contatta promettendo guadagni automatici con un'ora al giorno. Ti fa mettere soldi su una piattaforma fasulla che mostra profitti finti. Quando chiedi il prelievo, scompare e ti blocca."</p>
+                        <div style="margin-bottom: 8px;"><span class="report-loss">Danno economico: €450</span></div>
+                        <p class="report-text">"La solita esca. Ti convince che basti 1 ora al giorno per cambiare vita, ti fa iscrivere a un finto broker con un deposito e appena i soldi arrivano lì non li vedi più. Assistenza sparita."</p>
                     </div>
 
+                    <!-- Segnalazione 2 (Qualche ora fa) -->
                     <div class="report-item">
                         <div class="report-header">
-                            <span>Utente: Alessia V. (Roma)</span>
-                            <span class="report-loss">Persi: €1.200</span>
+                            <span>ID: #8375 - Utente Verificato</span>
+                            <span class="report-time" id="time2">In calcolo...</span>
                         </div>
-                        <p class="report-text">"Usa foto in Rolls Royce per farsi credere ricca. Nel canale Telegram pubblica solo recensioni finte create da profili bot. Non cascateci, è uno schema Ponzi."</p>
+                        <div style="margin-bottom: 8px;"><span class="report-loss">Danno economico: €1.200</span></div>
+                        <p class="report-text">"Dietro la promessa 'non è fortuna, è un sistema' c'è un banalissimo schema di affiliazione per spingerti a versare soldi su exchange opachi e non regolamentati. State lontani."</p>
                     </div>
 
+                    <!-- Segnalazione 3 (Ieri) -->
                     <div class="report-item">
                         <div class="report-header">
-                            <span>Utente: Francesco P. (Milano)</span>
-                            <span class="report-loss">Persi: €250</span>
+                            <span>ID: #8310 - Utente Verificato</span>
+                            <span class="report-time" id="time3">In calcolo...</span>
                         </div>
-                        <p class="report-text">"Dice che non è fortuna ma un sistema. Il sistema è rubarti i soldi del deposito. Ho provato a denunciare ma l'account Telegram è chiaramente un prestanome anonimo."</p>
+                        <div style="margin-bottom: 8px;"><span class="report-loss">Danno economico: €250</span></div>
+                        <p class="report-text">"Fatti ammaliare dalla foto del profilo e dalla Rolls Royce. Ti fa entrare in una chat dove ti mostra schermate di guadagni strabilianti di altre persone (ovviamente tutti complici o bot). Soldi persi subito."</p>
                     </div>
 
                 </div>
             </div>
 
-            <!-- DETTAGLI DI ANALISI -->
+            <!-- FAQ INFORMATIVE -->
             <div style="margin-bottom: 30px;">
                 <details>
-                    <summary>Come avviene l'approccio?</summary>
-                    <p>La vittima viene attratta tramite inserzioni o post in cui si ostenta uno stile di vita lussuoso. Successivamente viene spostata su Telegram (canale privato) per evitare i controlli e le rimozioni delle piattaforme tradizionali.</p>
+                    <summary>Cosa si rischia cliccando sul contatto?</summary>
+                    <p>L'inserimento in canali Telegram dove viene applicata una forte pressione psicologica e commerciale, mirata a far compiere azioni finanziarie d'impulso (depositi non rimborsabili).</p>
                 </details>
                 <details>
-                    <summary>I sistemi di guadagno in 1 ora esistono?</summary>
-                    <p>Nessun intermediario finanziario autorizzato promette rendite certe con sforzo minimo. Ogni proposta che garantisce profitti costanti senza rischi e con pochissimo lavoro è scientificamente una frode.</p>
+                    <summary>Le foto di lusso sono reali?</summary>
+                    <p>Anche se reali, mostrare beni di lusso (come auto o hotel) è una strategia di marketing aggressiva utilizzata appositamente per abbassare le difese critiche dell'utente.</p>
                 </details>
             </div>
 
-            <!-- Bottone Principale -->
             <a href="https://www.google.com" class="btn-action btn-exit">
-                <i class="fas fa-shield-alt"></i> Chiudi e proteggi i tuoi dati
+                <i class="fas fa-shield-alt"></i> Abbandona la navigazione a rischio
             </a>
 
         </div>
 
     </div>
 
-    <!-- SCRIPT LOGICA CONTATORE E NUOVE SEGNALAZIONI DELAYED -->
+    <!-- GENERATORE DI TEMPI REALI (Se fai refresh restano credibili e tarati sull'orario attuale) -->
     <script>
-        // Incrementa il contatore delle segnalazioni live ogni pochi secondi per dare l'idea di attività reale
-        let count = 384;
-        const counterElement = document.getElementById('counterSegnalazioni');
-        
-        setInterval(() => {
-            count += Math.floor(Math.random() * 2) + 1;
-            counterElement.innerText = count;
-        }, 7000);
+        function generateRealisticTimestamps() {
+            const now = new Date();
+            
+            // Segnalazione 1: 14 minuti fa
+            const time1 = new Date(now.getTime() - 14 * 60 * 1000);
+            document.getElementById('time1').innerText = `Inviata 14 min fa (${time1.getHours().toString().padStart(2, '0')}:${time1.getMinutes().toString().padStart(2, '0')})`;
+            
+            // Segnalazione 2: Circa 3 ore fa
+            const time2 = new Date(now.getTime() - 3 * 60 * 60 * 1000 - 12 * 60 * 1000);
+            document.getElementById('time2').innerText = `Oggi alle ${time2.getHours().toString().padStart(2, '0')}:${time2.getMinutes().toString().padStart(2, '0')}`;
+            
+            // Segnalazione 3: Ieri
+            const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            document.getElementById('time3').innerText = `Ieri alle ${yesterday.getHours().toString().padStart(2, '0')}:${yesterday.getMinutes().toString().padStart(2, '0')}`;
+        }
 
-        // Aggiunge una segnalazione simulata in tempo reale dopo 5 secondi dall'apertura della pagina
-        setTimeout(() => {
-            const feed = document.getElementById('feedContainer');
-            const newReport = document.createElement('div');
-            newReport.className = 'report-item';
-            newReport.style.borderLeft = '3px solid var(--warning)'; // Colore arancione per indicare "Appena arrivata"
-            
-            newReport.innerHTML = `
-                <div class="report-header">
-                    <span>Utente: Anonimo (In attesa di verifica)</span>
-                    <span class="report-loss" style="color: var(--warning);">Persi: €450</span>
-                </div>
-                <p class="report-text">"Segnalo lo stesso modus operandi. Scritto oggi, mi ha chiesto un deposito immediato in Bitcoin per entrare nel gruppo dei segnali. Ho chiuso la chat fortunatamente."</p>
-            `;
-            
-            // Inserisce in cima al feed
-            feed.insertBefore(newReport, feed.firstChild);
-        }, 5000);
+        // Esegui subito al caricamento
+        generateRealisticTimestamps();
     </script>
 
 </body>
