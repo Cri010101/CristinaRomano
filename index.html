@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>// avviso.sh — schemi "trading facile" su Telegram</title>
+<title>// avviso.sh — analisi schema @cristinamoneylab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -31,7 +31,6 @@
     position:relative;
     overflow-x:hidden;
   }
-  /* scanlines + vignette */
   body::before{
     content:"";
     position:fixed;inset:0;
@@ -122,17 +121,54 @@
     font-size:0.86rem;
     max-width:520px;
   }
-  .badge{
-    display:inline-block;
-    margin-top:16px;
-    border:1px solid var(--red);
-    color:var(--red);
-    font-size:0.68rem;
-    letter-spacing:0.08em;
-    padding:4px 9px;
-    border-radius:3px;
-    text-transform:uppercase;
+  
+  /* STILI APPOSITI PER IL CARICAMENTO E IL LAYOUT DELL'IMMAGINE DEL VOLTO */
+  .target-spec{
+    margin-top:20px;
+    background:rgba(255, 77, 77, 0.05);
+    border: 1px dashed var(--red);
+    padding: 16px;
+    border-radius: 6px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
   }
+  .image-container{
+    width: 80px;
+    height: 80px;
+    position: relative;
+    background: #000;
+    border: 1px solid var(--green-dim);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .target-img-preview{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .fallback-icon{
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: var(--green);
+    background: #070a09;
+    padding: 16px;
+  }
+  .target-info{
+    font-size: 0.78rem;
+  }
+  .target-info b{
+    color: var(--red);
+  }
+
   .meta-row{
     margin-top:18px;
     font-size:0.7rem;
@@ -304,6 +340,7 @@
   @media (max-width:560px){
     .crt{padding:22px;}
     .verify-grid{grid-template-columns:1fr;}
+    .target-spec{flex-direction: column; align-items: flex-start; gap:10px;}
   }
 </style>
 </head>
@@ -317,48 +354,68 @@
   <div class="crt">
     <header>
       <div class="ascii-bar">────────────────────────────────────────</div>
-      <div class="prompt"><b>$</b> cat /var/log/avviso_pubblico.txt</div>
-      <h1>Riconoscere lo schema "trading facile"<br>diffuso su Telegram<span class="cursor blink">_</span></h1>
-      <p>Guida pratica per chi è stato contattato con la promessa di guadagni rapidi tramite broker, exchange o "segnali di trading", e canali ufficiali dove verificare e segnalare.</p>
-      <span class="badge">avviso pubblico — non un'accusa a persone specifiche</span>
+      <div class="prompt"><b>$</b> cat /var/log/analisi_cristinamoneylab.txt</div>
+      <h1>Analisi del pattern informativo<br>associato a @cristinamoneylab<span class="cursor blink">_</span></h1>
+      <p>Studio tecnico e guida di prevenzione indipendente sui vettori di contatto legati alla promozione di entrate facili e trading online automatizzato.</p>
+      
+      <!-- Box Identità Segnalata con Caricamento Faccia Ottimizzato -->
+      <div class="target-spec">
+        <div class="image-container">
+          <img src="image.jpg" class="target-img-preview" alt="Cristina Romano Face ID" onerror="handleImageError(this)">
+          <div class="fallback-icon" id="svg-fallback">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="100%" height="100%">
+              <path d="M4 16V17C4 18.6569 5.34315 20 7 20H17C18.6569 20 20 18.6569 20 17V16M4 8V7C4 5.34315 5.34315 4 7 4H17C18.6569 4 20 5.34315 20 7V8" stroke-linecap="round"/>
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 2V4M12 20V22M2 12H4M20 12H22" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="target-info">
+          <div><b>[TARGET DETECTED]</b></div>
+          <div>Nome Profilo: Cristina Romano</div>
+          <div>Contatto Telegram: @cristinamoneylab</div>
+          <div>Sorgente Riconoscimento: Ricostruzione Visiva Interfaccia</div>
+        </div>
+      </div>
+
       <div class="meta-row">
         <span id="bulletin-date">// data: —</span>
-        <span>// stato: contenuto informativo</span>
+        <span>// stato: analisi vettori d'inganno</span>
       </div>
     </header>
 
     <section>
-      <div class="cmd"><b>$</b> grep -r "red_flags" ./schema_truffa/</div>
+      <div class="cmd"><b>$</b> grep -i "red_flags" ./cristina_romano/bio.db</div>
 
       <div class="article">
         <div class="article-tag">[01]</div>
         <div>
-          <h3>Promessa di guadagno sproporzionato al rischio</h3>
-          <p>"Bastano 10 minuti al giorno", "non è fortuna, è un sistema": qualsiasi promessa di rendimenti alti e costanti senza rischio è un segnale d'allarme, indipendentemente da chi la fa.</p>
+          <h3>Il mito del "Sistema che funziona"</h3>
+          <p>La dichiarazione <i>"Non è fortuna — è un sistema che funziona"</i> viene usata per creare una falsa percezione di scientificità e sicurezza, inducendo l'utente a pensare che il rischio finanziario sia azzerato.</p>
         </div>
       </div>
 
       <div class="article">
         <div class="article-tag">[02]</div>
         <div>
-          <h3>Prova sociale costruita ad hoc</h3>
-          <p>Screenshot di guadagni altrui, gruppi Telegram pieni di entusiasti, foto di beni di lusso: strumenti di marketing pensati per abbassare la soglia critica, reali o meno che siano le immagini.</p>
+          <h3>Svalutazione del fattore tempo ("1 ora al giorno")</h3>
+          <p>Promettere che <i>"1 ora al giorno può fare la differenza"</i> serve a rendere accessibile la trappola a chiunque (studenti, lavoratori dipendenti, disoccupati), minimizzando lo sforzo e lo studio necessari per operare legalmente sui mercati.</p>
         </div>
       </div>
 
       <div class="article">
         <div class="article-tag">[03]</div>
         <div>
-          <h3>Deposito su piattaforma non verificabile</h3>
-          <p>Il passaggio chiave è sempre lo stesso: un deposito iniziale su un exchange o broker che non risulta in nessun registro ufficiale, spesso seguito da richieste di versamenti aggiuntivi.</p>
+          <h3>Ingegneria sociale e ostentazione del lusso</h3>
+          <p>L'associazione visiva a marchi di lusso estremo (come vetture Rolls-Royce presenti nei file multimediali d'analisi) è un bias cognitivo mirato ad agganciare l'utente tramite il desiderio di emulazione dello status sociale.</p>
         </div>
       </div>
 
       <div class="article">
         <div class="article-tag">[04]</div>
         <div>
-          <h3>Assistenza che sparisce al momento del prelievo</h3>
-          <p>Finché si deposita, il supporto è rapido. Alla prima richiesta di prelievo, le risposte rallentano o si interrompono: uno dei pattern più riconosciuti in questo tipo di truffa.</p>
+          <h3>Isolamento transazionale su Telegram</h3>
+          <p>L'utilizzo del contatto diretto @cristinamoneylab sposta la conversazione fuori dalle piattaforme web indicizzate, impedendo la tracciabilità delle promesse commerciali e facilitando il blocco unilaterale dell'utente in caso di controversie sul capitale versato.</p>
         </div>
       </div>
     </section>
@@ -368,22 +425,22 @@
       <div class="verify-grid">
         <div class="verify-card">
           <h4>// CONSOB — registro intermediari</h4>
-          <p>Controlla se chi ti contatta è autorizzato a operare in Italia.</p>
+          <p>Controlla se chi ti propone investimenti ha una regolare licenza operante in Italia.</p>
           <a href="https://www.consob.it" target="_blank" rel="noopener">consob.it →</a>
         </div>
         <div class="verify-card">
           <h4>// CONSOB — abusivismo finanziario</h4>
-          <p>Elenco aggiornato di siti e soggetti segnalati per offerta abusiva.</p>
+          <p>Elenco aggiornato dei soggetti segnalati e dei siti oscurati per attività illecita.</p>
           <a href="https://www.consob.it/web/consob-and-its-activities/abusivismo-finanziario" target="_blank" rel="noopener">consob.it/abusivismo →</a>
         </div>
         <div class="verify-card">
           <h4>// Polizia Postale</h4>
-          <p>Canale ufficiale per denunciare truffe online e frodi digitali.</p>
+          <p>Canale istituzionale per denunciare frodi finanziarie e raggiri digitali.</p>
           <a href="https://www.commissariatodips.it" target="_blank" rel="noopener">commissariatodips.it →</a>
         </div>
         <div class="verify-card">
           <h4>// Banca d'Italia</h4>
-          <p>Verifica se un soggetto è autorizzato a raccogliere fondi o operare.</p>
+          <p>Verifica se il broker o l'ente che riceve il denaro è autorizzato alla raccolta del risparmio.</p>
           <a href="https://www.bancaditalia.it" target="_blank" rel="noopener">bancaditalia.it →</a>
         </div>
       </div>
@@ -396,8 +453,8 @@
       </div>
 
       <form id="report-form">
-        <label for="report-text">&gt; racconta cosa è successo (senza nomi o dati personali)</label>
-        <textarea id="report-text" maxlength="500" placeholder="es: sono stato contattato su Telegram da un profilo che prometteva guadagni con il trading..."></textarea>
+        <label for="report-text">&gt; racconta la tua esperienza con @cristinamoneylab (senza dati personali)</label>
+        <textarea id="report-text" maxlength="500" placeholder="es: sono stato indirizzato a questo contatto Telegram dopo aver visto un video sul guadagno online..."></textarea>
 
         <label for="report-loss">&gt; fascia di danno economico (facoltativo)</label>
         <select id="report-loss">
@@ -410,7 +467,7 @@
 
         <div class="consent-row">
           <input type="checkbox" id="report-consent">
-          <label for="report-consent" style="text-transform:none;letter-spacing:0;">conferma: il testo non contiene nomi, contatti o dati identificativi di terzi; acconsento alla pubblicazione pubblica.</label>
+          <label for="report-consent" style="text-transform:none;letter-spacing:0;">conferma: il testo descrive l'approccio o l'interazione e non contiene dati sensibili personali; acconsento alla pubblicazione anonima nel log sottostante.</label>
         </div>
 
         <button id="submit-btn" type="submit">eseguire ./invia_segnalazione</button>
@@ -424,8 +481,8 @@
 
     <footer>
       <div class="transparency">
-        // questa pagina non identifica né accusa alcuna persona o profilo specifico.<br>
-        // per segnalare un soggetto in particolare, usa i canali ufficiali sopra: la segnalazione viene trattata da un'autorità competente, non pubblicata come accusa non verificata.
+        // questa pagina fornisce un'analisi puramente informativa dei testi e dei pattern di comunicazione standard usati online.<br>
+        // per avviare accertamenti legali o segnalare formalmente il profilo, si esorta ad utilizzare esclusivamente i portali delle forze dell'ordine sopra linkati.
       </div>
       <a href="https://www.commissariatodips.it" target="_blank" rel="noopener" class="exit-btn">./segnala_ufficialmente</a>
     </footer>
@@ -435,6 +492,15 @@
 <script>
   document.getElementById('bulletin-date').textContent =
     '// data: ' + new Date().toLocaleDateString('it-IT', { day:'2-digit', month:'long', year:'numeric' });
+
+  // Mostra l'icona radar se l'immagine image.jpg non è presente nella cartella principale
+  function handleImageError(img) {
+    img.style.display = 'none';
+    const fallback = img.nextElementSibling;
+    if(fallback) {
+      fallback.style.display = 'flex';
+    }
+  }
 
   const form = document.getElementById('report-form');
   const statusEl = document.getElementById('form-status');
@@ -472,7 +538,7 @@
           if (res && res.value){
             entries.push(JSON.parse(res.value));
           }
-        }catch(e){ /* skip unreadable entry */ }
+        }catch(e){ }
       }
       entries.sort((a,b) => b.submittedAt - a.submittedAt);
       if (entries.length === 0){
