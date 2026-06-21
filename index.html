@@ -1,403 +1,536 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALLERTA TRUFFA: Analisi Indipendente @cristinamoneylab</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --bg-dark: #09090b;
-            --card-dark: #121216;
-            --danger: #ef4444;
-            --danger-hover: #dc2626;
-            --warning: #f59e0b;
-            --text-light: #f4f4f5;
-            --text-muted: #a1a1aa;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>// avviso.sh — schemi "trading facile" su Telegram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#06080a;
+    --panel:#0b0f10;
+    --panel-raised:#0e1416;
+    --green:#3df27a;
+    --green-dim:#1c5a36;
+    --green-soft:#a9f5c4;
+    --amber:#ffb300;
+    --red:#ff4d4d;
+    --line:#16332180;
+    --text:#cdeede;
+    --text-dim:#6b9783;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scrollbar-color:var(--green-dim) var(--bg);}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'JetBrains Mono',monospace;
+    line-height:1.6;
+    padding:40px 16px 90px;
+    position:relative;
+    overflow-x:hidden;
+  }
+  /* scanlines + vignette */
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    background:repeating-linear-gradient(
+      to bottom,
+      rgba(61,242,122,0.025) 0px,
+      rgba(61,242,122,0.025) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    pointer-events:none;
+    z-index:50;
+  }
+  body::after{
+    content:"";
+    position:fixed;inset:0;
+    background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.65) 100%);
+    pointer-events:none;
+    z-index:49;
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .blink{animation:blink 1.1s steps(1) infinite;}
+    .crt-flicker{animation:flicker 6s infinite;}
+  }
+  @keyframes blink{50%{opacity:0;}}
+  @keyframes flicker{
+    0%,96%,100%{opacity:1;}
+    97%{opacity:0.85;}
+    98%{opacity:1;}
+  }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+  .term{
+    max-width:720px;
+    margin:0 auto;
+    background:var(--panel);
+    border:1px solid var(--green-dim);
+    border-radius:8px;
+    box-shadow:0 0 0 1px #000, 0 30px 60px -20px rgba(0,0,0,0.8), 0 0 40px -10px rgba(61,242,122,0.08);
+    position:relative;
+    z-index:1;
+  }
+  .titlebar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 16px;
+    border-bottom:1px solid var(--green-dim);
+    background:linear-gradient(180deg,#0d1311,#0a0f0d);
+    border-radius:8px 8px 0 0;
+  }
+  .dot{width:10px;height:10px;border-radius:50%;}
+  .dot.r{background:#ff5f56;}
+  .dot.y{background:#ffbd2e;}
+  .dot.g{background:#27c93f;}
+  .titlebar span{
+    margin-left:10px;
+    font-size:0.72rem;
+    color:var(--text-dim);
+  }
 
-        h1, h2, h3, .brand, .stat-static {
-            font-family: 'Space Grotesk', sans-serif;
-        }
+  .crt{padding:32px;}
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            min-height: 100vh;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+  .prompt{
+    color:var(--green-dim);
+    font-size:0.78rem;
+  }
+  .prompt b{color:var(--green);font-weight:500;}
 
-        .grid-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: linear-gradient(rgba(239, 68, 68, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(239, 68, 68, 0.02) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: -2;
-        }
+  header{padding-bottom:26px;border-bottom:1px dashed var(--green-dim);margin-bottom:26px;}
+  .ascii-bar{
+    color:var(--green-dim);
+    font-size:0.7rem;
+    letter-spacing:0.05em;
+    margin-bottom:14px;
+    white-space:pre;
+  }
+  h1{
+    font-size:1.5rem;
+    font-weight:700;
+    color:var(--green-soft);
+    line-height:1.3;
+    margin:10px 0 14px;
+    text-shadow:0 0 18px rgba(61,242,122,0.25);
+  }
+  h1 .cursor{color:var(--green);}
+  header p{
+    color:var(--text-dim);
+    font-size:0.86rem;
+    max-width:520px;
+  }
+  .badge{
+    display:inline-block;
+    margin-top:16px;
+    border:1px solid var(--red);
+    color:var(--red);
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    padding:4px 9px;
+    border-radius:3px;
+    text-transform:uppercase;
+  }
+  .meta-row{
+    margin-top:18px;
+    font-size:0.7rem;
+    color:var(--text-dim);
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+  }
 
-        .ambient-glow {
-            position: fixed;
-            top: -20%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(239,64,64,0.06) 0%, rgba(0,0,0,0) 70%);
-            z-index: -1;
-        }
+  section{margin-bottom:32px;}
+  .cmd{
+    font-size:0.78rem;
+    color:var(--text-dim);
+    margin-bottom:16px;
+  }
+  .cmd b{color:var(--green);}
 
-        .container {
-            width: 100%;
-            max-width: 650px;
-        }
+  .article{
+    display:flex;
+    gap:14px;
+    padding:13px 14px;
+    border:1px solid var(--line);
+    border-radius:5px;
+    background:var(--panel-raised);
+    margin-bottom:10px;
+  }
+  .article-tag{
+    color:var(--green);
+    font-size:0.78rem;
+    font-weight:600;
+    flex-shrink:0;
+  }
+  .article h3{
+    font-size:0.88rem;
+    color:var(--green-soft);
+    font-weight:600;
+    margin-bottom:5px;
+  }
+  .article p{font-size:0.8rem;color:var(--text-dim);}
 
-        .emergency-banner {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--danger);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            font-size: 0.85rem;
-            color: var(--danger);
-            font-weight: 600;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+  .verify-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .verify-card{
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:14px 15px;
+    background:var(--panel-raised);
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .verify-card:hover{
+    border-color:var(--green-dim);
+    box-shadow:0 0 16px -6px rgba(61,242,122,0.35);
+  }
+  .verify-card h4{font-size:0.8rem;color:var(--green);margin-bottom:5px;}
+  .verify-card p{font-size:0.74rem;color:var(--text-dim);margin-bottom:10px;}
+  .verify-card a{
+    font-size:0.74rem;
+    color:var(--green-soft);
+    text-decoration:none;
+    border-bottom:1px solid var(--green-dim);
+  }
 
-        .main-card {
-            background: var(--card-dark);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-top: 4px solid var(--danger);
-            border-radius: 24px;
-            padding: 35px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            margin-bottom: 25px;
-        }
+  .registry-note{
+    font-size:0.78rem;
+    color:var(--text-dim);
+    border:1px solid var(--amber);
+    background:rgba(255,179,0,0.06);
+    border-radius:4px;
+    padding:12px 14px;
+    margin-bottom:18px;
+  }
+  .registry-note b{color:var(--amber);}
 
-        .profile-box {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            margin-bottom: 30px;
-        }
+  form{
+    border:1px solid var(--green-dim);
+    border-radius:5px;
+    background:var(--panel-raised);
+    padding:18px;
+    margin-bottom:22px;
+    display:flex;
+    flex-direction:column;
+    gap:11px;
+  }
+  label{font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;}
+  textarea, select{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.84rem;
+    background:#070a09;
+    border:1px solid var(--line);
+    color:var(--green-soft);
+    border-radius:4px;
+    padding:10px 11px;
+    resize:vertical;
+  }
+  textarea{min-height:78px;}
+  textarea::placeholder{color:#3a5246;}
+  textarea:focus, select:focus{outline:none;border-color:var(--green);}
+  .consent-row{display:flex;gap:8px;align-items:flex-start;font-size:0.74rem;color:var(--text-dim);}
+  .consent-row input{margin-top:3px;accent-color:var(--green);}
+  button{
+    align-self:flex-start;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.76rem;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    background:var(--green);
+    color:#04130a;
+    border:none;
+    font-weight:700;
+    padding:10px 18px;
+    border-radius:4px;
+    cursor:pointer;
+  }
+  button:hover{background:var(--green-soft);}
+  button:disabled{opacity:0.4;cursor:default;}
+  .form-status{font-size:0.74rem;color:var(--text-dim);min-height:14px;}
 
-        .profile-avatar {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            flex-shrink: 0;
-        }
+  .feed-item{
+    border:1px solid var(--line);
+    border-left:2px solid var(--green-dim);
+    background:#070a09;
+    border-radius:0 4px 4px 0;
+    padding:11px 13px;
+    margin-bottom:8px;
+  }
+  .feed-meta{
+    font-size:0.68rem;
+    color:var(--text-dim);
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:6px;
+  }
+  .feed-meta .tag{color:var(--amber);}
+  .feed-text{font-size:0.82rem;color:var(--text);}
+  .feed-text::before{content:"> ";color:var(--green-dim);}
+  .feed-empty{
+    font-size:0.8rem;
+    color:var(--text-dim);
+    padding:16px 0;
+    text-align:center;
+  }
 
-        .profile-avatar img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            filter: grayscale(100%) contrast(120%);
-            border: 2px solid var(--text-muted);
-        }
+  footer{
+    border-top:1px dashed var(--green-dim);
+    padding-top:22px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .transparency{font-size:0.72rem;color:var(--text-dim);line-height:1.7;}
+  .exit-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:13px;
+    border-radius:4px;
+    background:transparent;
+    border:1px solid var(--red);
+    color:var(--red);
+    text-decoration:none;
+    font-weight:600;
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    transition:background .15s, color .15s;
+  }
+  .exit-btn:hover{background:var(--red);color:#1a0606;}
 
-        .scam-stamp {
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            background: var(--danger);
-            color: white;
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 6px;
-            text-transform: uppercase;
-        }
-
-        .profile-details h2 {
-            font-size: 1.4rem;
-        }
-
-        .profile-details p {
-            color: var(--danger);
-            font-weight: 600;
-        }
-
-        /* --- STATISTICHE STATICHE E REALISTICHE --- */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .stat-box {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.05);
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .stat-static {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--danger);
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        /* --- FEED SEGNALAZIONI --- */
-        .reports-feed-box {
-            background: rgba(0, 0, 0, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .reports-feed-box h3 {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            color: var(--text-light);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .database-status {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        .report-item {
-            background: rgba(255, 255, 255, 0.01);
-            border-left: 3px solid var(--danger);
-            padding: 15px;
-            border-radius: 4px 8px 8px 4px;
-            margin-bottom: 12px;
-            font-size: 0.85rem;
-            border: 1px solid rgba(255,255,255,0.02);
-            border-left: 3px solid var(--danger);
-        }
-
-        .report-header {
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-muted);
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 0.8rem;
-        }
-
-        .report-time {
-            color: var(--warning);
-            font-weight: 400;
-        }
-
-        .report-loss {
-            color: #fca5a5;
-            background: rgba(239, 68, 68, 0.1);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-        }
-
-        .report-text {
-            color: #d4d4d8;
-            line-height: 1.5;
-        }
-
-        /* FAQ */
-        details {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 8px;
-            margin-bottom: 10px;
-            padding: 12px 15px;
-        }
-
-        summary {
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        details p {
-            margin-top: 10px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        .btn-action {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            justify-content: center;
-            padding: 15px;
-            border-radius: 12px;
-            font-weight: 700;
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            border: none;
-        }
-
-        .btn-exit {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-exit:hover {
-            background: var(--danger-hover);
-        }
-    </style>
+  @media (max-width:560px){
+    .crt{padding:22px;}
+    .verify-grid{grid-template-columns:1fr;}
+  }
+</style>
 </head>
-<body>
+<body class="crt-flicker">
+<div class="term">
+  <div class="titlebar">
+    <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+    <span>root@avviso:~/awareness$ ./bollettino.sh</span>
+  </div>
 
-    <div class="grid-bg"></div>
-    <div class="ambient-glow"></div>
+  <div class="crt">
+    <header>
+      <div class="ascii-bar">────────────────────────────────────────</div>
+      <div class="prompt"><b>$</b> cat /var/log/avviso_pubblico.txt</div>
+      <h1>Riconoscere lo schema "trading facile"<br>diffuso su Telegram<span class="cursor blink">_</span></h1>
+      <p>Guida pratica per chi è stato contattato con la promessa di guadagni rapidi tramite broker, exchange o "segnali di trading", e canali ufficiali dove verificare e segnalare.</p>
+      <span class="badge">avviso pubblico — non un'accusa a persone specifiche</span>
+      <div class="meta-row">
+        <span id="bulletin-date">// data: —</span>
+        <span>// stato: contenuto informativo</span>
+      </div>
+    </header>
 
-    <div class="container">
-        
-        <div class="emergency-banner">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span>ATTENZIONE: Analisi di rischio indipendente sul canale Telegram indicato.</span>
+    <section>
+      <div class="cmd"><b>$</b> grep -r "red_flags" ./schema_truffa/</div>
+
+      <div class="article">
+        <div class="article-tag">[01]</div>
+        <div>
+          <h3>Promessa di guadagno sproporzionato al rischio</h3>
+          <p>"Bastano 10 minuti al giorno", "non è fortuna, è un sistema": qualsiasi promessa di rendimenti alti e costanti senza rischio è un segnale d'allarme, indipendentemente da chi la fa.</p>
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="article-tag">[02]</div>
+        <div>
+          <h3>Prova sociale costruita ad hoc</h3>
+          <p>Screenshot di guadagni altrui, gruppi Telegram pieni di entusiasti, foto di beni di lusso: strumenti di marketing pensati per abbassare la soglia critica, reali o meno che siano le immagini.</p>
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="article-tag">[03]</div>
+        <div>
+          <h3>Deposito su piattaforma non verificabile</h3>
+          <p>Il passaggio chiave è sempre lo stesso: un deposito iniziale su un exchange o broker che non risulta in nessun registro ufficiale, spesso seguito da richieste di versamenti aggiuntivi.</p>
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="article-tag">[04]</div>
+        <div>
+          <h3>Assistenza che sparisce al momento del prelievo</h3>
+          <p>Finché si deposita, il supporto è rapido. Alla prima richiesta di prelievo, le risposte rallentano o si interrompono: uno dei pattern più riconosciuti in questo tipo di truffa.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="cmd"><b>$</b> whois --verify-before-trusting</div>
+      <div class="verify-grid">
+        <div class="verify-card">
+          <h4>// CONSOB — registro intermediari</h4>
+          <p>Controlla se chi ti contatta è autorizzato a operare in Italia.</p>
+          <a href="https://www.consob.it" target="_blank" rel="noopener">consob.it →</a>
+        </div>
+        <div class="verify-card">
+          <h4>// CONSOB — abusivismo finanziario</h4>
+          <p>Elenco aggiornato di siti e soggetti segnalati per offerta abusiva.</p>
+          <a href="https://www.consob.it/web/consob-and-its-activities/abusivismo-finanziario" target="_blank" rel="noopener">consob.it/abusivismo →</a>
+        </div>
+        <div class="verify-card">
+          <h4>// Polizia Postale</h4>
+          <p>Canale ufficiale per denunciare truffe online e frodi digitali.</p>
+          <a href="https://www.commissariatodips.it" target="_blank" rel="noopener">commissariatodips.it →</a>
+        </div>
+        <div class="verify-card">
+          <h4>// Banca d'Italia</h4>
+          <p>Verifica se un soggetto è autorizzato a raccogliere fondi o operare.</p>
+          <a href="https://www.bancaditalia.it" target="_blank" rel="noopener">bancaditalia.it →</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="cmd"><b>$</b> tail -f /var/log/registry.log</div>
+      <div class="registry-note">
+        <b>// nota di trasparenza:</b> questo registro mostra solo segnalazioni inserite volontariamente da chi visita questa pagina. Nessuna voce è precompilata o simulata. Inviando una segnalazione accetti che il testo (senza dati identificativi) sia pubblico qui sotto.
+      </div>
+
+      <form id="report-form">
+        <label for="report-text">&gt; racconta cosa è successo (senza nomi o dati personali)</label>
+        <textarea id="report-text" maxlength="500" placeholder="es: sono stato contattato su Telegram da un profilo che prometteva guadagni con il trading..."></textarea>
+
+        <label for="report-loss">&gt; fascia di danno economico (facoltativo)</label>
+        <select id="report-loss">
+          <option value="">preferisco non specificare</option>
+          <option value="Nessun danno / contattato in tempo">nessun danno / contattato in tempo</option>
+          <option value="Sotto i 200€">sotto i 200€</option>
+          <option value="200€ – 1.000€">200€ – 1.000€</option>
+          <option value="Oltre 1.000€">oltre 1.000€</option>
+        </select>
+
+        <div class="consent-row">
+          <input type="checkbox" id="report-consent">
+          <label for="report-consent" style="text-transform:none;letter-spacing:0;">conferma: il testo non contiene nomi, contatti o dati identificativi di terzi; acconsento alla pubblicazione pubblica.</label>
         </div>
 
-        <div class="main-card">
-            
-            <!-- Profilo Sotto Analisi -->
-            <div class="profile-box">
-                <div class="profile-avatar">
-                    <img src="Screenshot_20260621-135247.Telegram.jpg" alt="Cristina Romano" onerror="this.src='https://via.placeholder.com/80'">
-                    <span class="scam-stamp">Segnalato</span>
-                </div>
-                <div class="profile-details">
-                    <h2>Cristina Romano</h2>
-                    <p><i class="fab fa-telegram-plane"></i> @cristinamoneylab</p>
-                </div>
-            </div>
+        <button id="submit-btn" type="submit">eseguire ./invia_segnalazione</button>
+        <div class="form-status" id="form-status"></div>
+      </form>
 
-            <!-- DATI ARCHIVIATI (Fissi e credibili) -->
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <span class="stat-static">42</span>
-                    <span class="stat-label">Testimonianze depositate</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-static" style="color: var(--warning);">Moderato</span>
-                    <span class="stat-label">Livello di Pericolo</span>
-                </div>
-            </div>
+      <div id="feed-container">
+        <div class="feed-empty">// caricamento registro…</div>
+      </div>
+    </section>
 
-            <!-- FEED SEGNALAZIONI CON TIMESTAMP DINAMICI REALI -->
-            <div class="reports-feed-box">
-                <h3>
-                    <span>Registro Segnalazioni</span>
-                    <span class="database-status">Database Aggiornato</span>
-                </h3>
-                
-                <div class="feed-container">
-                    
-                    <!-- Segnalazione 1 (Pochi minuti fa) -->
-                    <div class="report-item">
-                        <div class="report-header">
-                            <span>ID: #8392 - Utente Verificato</span>
-                            <span class="report-time" id="time1">In calcolo...</span>
-                        </div>
-                        <div style="margin-bottom: 8px;"><span class="report-loss">Danno economico: €450</span></div>
-                        <p class="report-text">"La solita esca. Ti convince che basti 1 ora al giorno per cambiare vita, ti fa iscrivere a un finto broker con un deposito e appena i soldi arrivano lì non li vedi più. Assistenza sparita."</p>
-                    </div>
+    <footer>
+      <div class="transparency">
+        // questa pagina non identifica né accusa alcuna persona o profilo specifico.<br>
+        // per segnalare un soggetto in particolare, usa i canali ufficiali sopra: la segnalazione viene trattata da un'autorità competente, non pubblicata come accusa non verificata.
+      </div>
+      <a href="https://www.commissariatodips.it" target="_blank" rel="noopener" class="exit-btn">./segnala_ufficialmente</a>
+    </footer>
+  </div>
+</div>
 
-                    <!-- Segnalazione 2 (Qualche ora fa) -->
-                    <div class="report-item">
-                        <div class="report-header">
-                            <span>ID: #8375 - Utente Verificato</span>
-                            <span class="report-time" id="time2">In calcolo...</span>
-                        </div>
-                        <div style="margin-bottom: 8px;"><span class="report-loss">Danno economico: €1.200</span></div>
-                        <p class="report-text">"Dietro la promessa 'non è fortuna, è un sistema' c'è un banalissimo schema di affiliazione per spingerti a versare soldi su exchange opachi e non regolamentati. State lontani."</p>
-                    </div>
+<script>
+  document.getElementById('bulletin-date').textContent =
+    '// data: ' + new Date().toLocaleDateString('it-IT', { day:'2-digit', month:'long', year:'numeric' });
 
-                    <!-- Segnalazione 3 (Ieri) -->
-                    <div class="report-item">
-                        <div class="report-header">
-                            <span>ID: #8310 - Utente Verificato</span>
-                            <span class="report-time" id="time3">In calcolo...</span>
-                        </div>
-                        <div style="margin-bottom: 8px;"><span class="report-loss">Danno economico: €250</span></div>
-                        <p class="report-text">"Fatti ammaliare dalla foto del profilo e dalla Rolls Royce. Ti fa entrare in una chat dove ti mostra schermate di guadagni strabilianti di altre persone (ovviamente tutti complici o bot). Soldi persi subito."</p>
-                    </div>
+  const form = document.getElementById('report-form');
+  const statusEl = document.getElementById('form-status');
+  const submitBtn = document.getElementById('submit-btn');
+  const feedContainer = document.getElementById('feed-container');
 
-                </div>
-            </div>
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
 
-            <!-- FAQ INFORMATIVE -->
-            <div style="margin-bottom: 30px;">
-                <details>
-                    <summary>Cosa si rischia cliccando sul contatto?</summary>
-                    <p>L'inserimento in canali Telegram dove viene applicata una forte pressione psicologica e commerciale, mirata a far compiere azioni finanziarie d'impulso (depositi non rimborsabili).</p>
-                </details>
-                <details>
-                    <summary>Le foto di lusso sono reali?</summary>
-                    <p>Anche se reali, mostrare beni di lusso (come auto o hotel) è una strategia di marketing aggressiva utilizzata appositamente per abbassare le difese critiche dell'utente.</p>
-                </details>
-            </div>
+  function timeAgo(ts){
+    const diffMin = Math.round((Date.now() - ts) / 60000);
+    if (diffMin < 1) return 'pochi istanti fa';
+    if (diffMin < 60) return diffMin + ' min fa';
+    const diffH = Math.round(diffMin / 60);
+    if (diffH < 24) return diffH + ' ore fa';
+    const diffD = Math.round(diffH / 24);
+    return diffD + ' giorni fa';
+  }
 
-            <a href="https://www.google.com" class="btn-action btn-exit">
-                <i class="fas fa-shield-alt"></i> Abbandona la navigazione a rischio
-            </a>
-
+  async function loadFeed(){
+    try{
+      const list = await window.storage.list('report:', true);
+      const keys = (list && list.keys) ? list.keys : [];
+      if (keys.length === 0){
+        feedContainer.innerHTML = '<div class="feed-empty">// registro vuoto — nessuna segnalazione ancora inserita</div>';
+        return;
+      }
+      const entries = [];
+      for (const key of keys){
+        try{
+          const res = await window.storage.get(key, true);
+          if (res && res.value){
+            entries.push(JSON.parse(res.value));
+          }
+        }catch(e){ /* skip unreadable entry */ }
+      }
+      entries.sort((a,b) => b.submittedAt - a.submittedAt);
+      if (entries.length === 0){
+        feedContainer.innerHTML = '<div class="feed-empty">// registro vuoto — nessuna segnalazione ancora inserita</div>';
+        return;
+      }
+      feedContainer.innerHTML = entries.map(e => `
+        <div class="feed-item">
+          <div class="feed-meta">
+            <span class="tag">${e.loss ? escapeHtml(e.loss) : 'danno non specificato'}</span>
+            <span>${timeAgo(e.submittedAt)}</span>
+          </div>
+          <div class="feed-text">${escapeHtml(e.text)}</div>
         </div>
+      `).join('');
+    }catch(err){
+      feedContainer.innerHTML = '<div class="feed-empty">// registro momentaneamente non disponibile</div>';
+    }
+  }
 
-    </div>
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = document.getElementById('report-text').value.trim();
+    const loss = document.getElementById('report-loss').value;
+    const consent = document.getElementById('report-consent').checked;
 
-    <!-- GENERATORE DI TEMPI REALI (Se fai refresh restano credibili e tarati sull'orario attuale) -->
-    <script>
-        function generateRealisticTimestamps() {
-            const now = new Date();
-            
-            // Segnalazione 1: 14 minuti fa
-            const time1 = new Date(now.getTime() - 14 * 60 * 1000);
-            document.getElementById('time1').innerText = `Inviata 14 min fa (${time1.getHours().toString().padStart(2, '0')}:${time1.getMinutes().toString().padStart(2, '0')})`;
-            
-            // Segnalazione 2: Circa 3 ore fa
-            const time2 = new Date(now.getTime() - 3 * 60 * 60 * 1000 - 12 * 60 * 1000);
-            document.getElementById('time2').innerText = `Oggi alle ${time2.getHours().toString().padStart(2, '0')}:${time2.getMinutes().toString().padStart(2, '0')}`;
-            
-            // Segnalazione 3: Ieri
-            const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-            document.getElementById('time3').innerText = `Ieri alle ${yesterday.getHours().toString().padStart(2, '0')}:${yesterday.getMinutes().toString().padStart(2, '0')}`;
-        }
+    if (text.length < 10){
+      statusEl.textContent = '// errore: aggiungi qualche dettaglio in più prima di inviare';
+      return;
+    }
+    if (!consent){
+      statusEl.textContent = '// errore: conferma il consenso alla pubblicazione per procedere';
+      return;
+    }
 
-        // Esegui subito al caricamento
-        generateRealisticTimestamps();
-    </script>
+    submitBtn.disabled = true;
+    statusEl.textContent = '// invio in corso…';
 
+    const entry = { text, loss, submittedAt: Date.now() };
+    const key = 'report:' + Date.now() + '-' + Math.random().toString(36).slice(2,8);
+
+    try{
+      const result = await window.storage.set(key, JSON.stringify(entry), true);
+      if (result){
+        statusEl.textContent = '// segnalazione pubblicata. grazie per il contributo.';
+        form.reset();
+        loadFeed();
+      } else {
+        statusEl.textContent = '// invio non riuscito, riprova';
+      }
+    }catch(err){
+      statusEl.textContent = '// errore di rete, riprova tra poco';
+    }finally{
+      submitBtn.disabled = false;
+    }
+  });
+
+  loadFeed();
+</script>
 </body>
 </html>
