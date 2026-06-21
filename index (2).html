@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALLERTA TRUFFA: Analisi Indipendente @cristinamoneylab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #09090b;
+            --card-dark: #121216;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --warning: #f59e0b;
+            --success: #10b981;
+            --text-light: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --border: rgba(239, 68, 68, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1, h2, h3, .brand, .counter-number {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(239, 68, 68, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(239, 68, 68, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -2;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            top: -20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(239,64,64,0.08) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+        }
+
+        .emergency-banner {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--danger);
+            font-weight: 600;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .main-card {
+            background: var(--card-dark);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 4px solid var(--danger);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            margin-bottom: 25px;
+        }
+
+        .profile-box {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(120%);
+            border: 2px solid var(--text-muted);
+        }
+
+        .scam-stamp {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .profile-details h2 {
+            font-size: 1.4rem;
+        }
+
+        .profile-details p {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        /* --- SEZIONE LIVE STATISTICS --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .counter-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--danger);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* --- LIVE FEED SEGNALAZIONI --- */
+        .reports-feed-box {
+            background: rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .reports-feed-box h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-light);
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--danger);
+            border-radius: 50%;
+            display: inline-block;
+            animation: blink 1s infinite alternate;
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; box-shadow: 0 0 8px var(--danger); }
+        }
+
+        .feed-container {
+            max-height: 280px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        /* Scrollbar personalizzata per il feed */
+        .feed-container::-webkit-scrollbar {
+            width: 4px;
+        }
+        .feed-container::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+
+        .report-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid var(--danger);
+            padding: 12px;
+            border-radius: 4px 8px 8px 4px;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            animation: fadeInReport 0.5s ease;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+        }
+
+        .report-loss {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .report-text {
+            color: #d4d4d8;
+            line-height: 1.4;
+        }
+
+        /* FAQ */
+        details {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            padding: 12px 15px;
+        }
+
+        summary {
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        details p {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-exit {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-exit:hover {
+            background: var(--danger-hover);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-bg"></div>
+    <div class="ambient-glow"></div>
+
+    <div class="container">
+        
+        <div class="emergency-banner">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>ATTENZIONE: Segnalazioni di attività illecita in corso su questa identità.</span>
+        </div>
+
+        <div class="main-card">
+            
+            <!-- Profilo -->
+            <div class="profile-box">
+                <div class="profile-avatar">
+                    <img src="Screenshot_20260621-135247.Telegram.jpg" alt="Cristina Romano" onerror="this.src='https://via.placeholder.com/80'">
+                    <span class="scam-stamp">Scam Alert</span>
+                </div>
+                <div class="profile-details">
+                    <h2>Cristina Romano</h2>
+                    <p><i class="fab fa-telegram-plane"></i> @cristinamoneylab</p>
+                </div>
+            </div>
+
+            <!-- CONTATORI STATISTICHE -->
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="counter-number" id="counterSegnalazioni">384</span>
+                    <span class="stat-label">Segnalazioni totali</span>
+                </div>
+                <div class="stat-box">
+                    <span class="counter-number" style="color: var(--warning);">€ 142.500</span>
+                    <span class="stat-label">Fondi totali persi stimati</span>
+                </div>
+            </div>
+
+            <!-- FEED REALE DELLE SEGNALAZIONI (SIMULATO) -->
+            <div class="reports-feed-box">
+                <h3><span class="live-dot"></span> Segnalazioni Verificate della Community</h3>
+                <div class="feed-container" id="feedContainer">
+                    
+                    <div class="report-item">
+                        <div class="report-header">
+                            <span>Utente: Marco T. (Torino)</span>
+                            <span class="report-loss">Persi: €600</span>
+                        </div>
+                        <p class="report-text">"Ti contatta promettendo guadagni automatici con un'ora al giorno. Ti fa mettere soldi su una piattaforma fasulla che mostra profitti finti. Quando chiedi il prelievo, scompare e ti blocca."</p>
+                    </div>
+
+                    <div class="report-item">
+                        <div class="report-header">
+                            <span>Utente: Alessia V. (Roma)</span>
+                            <span class="report-loss">Persi: €1.200</span>
+                        </div>
+                        <p class="report-text">"Usa foto in Rolls Royce per farsi credere ricca. Nel canale Telegram pubblica solo recensioni finte create da profili bot. Non cascateci, è uno schema Ponzi."</p>
+                    </div>
+
+                    <div class="report-item">
+                        <div class="report-header">
+                            <span>Utente: Francesco P. (Milano)</span>
+                            <span class="report-loss">Persi: €250</span>
+                        </div>
+                        <p class="report-text">"Dice che non è fortuna ma un sistema. Il sistema è rubarti i soldi del deposito. Ho provato a denunciare ma l'account Telegram è chiaramente un prestanome anonimo."</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- DETTAGLI DI ANALISI -->
+            <div style="margin-bottom: 30px;">
+                <details>
+                    <summary>Come avviene l'approccio?</summary>
+                    <p>La vittima viene attratta tramite inserzioni o post in cui si ostenta uno stile di vita lussuoso. Successivamente viene spostata su Telegram (canale privato) per evitare i controlli e le rimozioni delle piattaforme tradizionali.</p>
+                </details>
+                <details>
+                    <summary>I sistemi di guadagno in 1 ora esistono?</summary>
+                    <p>Nessun intermediario finanziario autorizzato promette rendite certe con sforzo minimo. Ogni proposta che garantisce profitti costanti senza rischi e con pochissimo lavoro è scientificamente una frode.</p>
+                </details>
+            </div>
+
+            <!-- Bottone Principale -->
+            <a href="https://www.google.com" class="btn-action btn-exit">
+                <i class="fas fa-shield-alt"></i> Chiudi e proteggi i tuoi dati
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- SCRIPT LOGICA CONTATORE E NUOVE SEGNALAZIONI DELAYED -->
+    <script>
+        // Incrementa il contatore delle segnalazioni live ogni pochi secondi per dare l'idea di attività reale
+        let count = 384;
+        const counterElement = document.getElementById('counterSegnalazioni');
+        
+        setInterval(() => {
+            count += Math.floor(Math.random() * 2) + 1;
+            counterElement.innerText = count;
+        }, 7000);
+
+        // Aggiunge una segnalazione simulata in tempo reale dopo 5 secondi dall'apertura della pagina
+        setTimeout(() => {
+            const feed = document.getElementById('feedContainer');
+            const newReport = document.createElement('div');
+            newReport.className = 'report-item';
+            newReport.style.borderLeft = '3px solid var(--warning)'; // Colore arancione per indicare "Appena arrivata"
+            
+            newReport.innerHTML = `
+                <div class="report-header">
+                    <span>Utente: Anonimo (In attesa di verifica)</span>
+                    <span class="report-loss" style="color: var(--warning);">Persi: €450</span>
+                </div>
+                <p class="report-text">"Segnalo lo stesso modus operandi. Scritto oggi, mi ha chiesto un deposito immediato in Bitcoin per entrare nel gruppo dei segnali. Ho chiuso la chat fortunatamente."</p>
+            `;
+            
+            // Inserisce in cima al feed
+            feed.insertBefore(newReport, feed.firstChild);
+        }, 5000);
+    </script>
+
+</body>
+</html>
